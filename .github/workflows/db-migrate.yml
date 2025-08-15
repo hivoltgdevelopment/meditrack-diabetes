@@ -1,0 +1,34 @@
+name: db-migrate
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to migrate (default: main)"
+        required: false
+        default: "main"
+  pull_request:
+    types: [labeled]
+
+jobs:
+  migrate:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'apply-migrations')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: ${{ github.event.inputs.ref || github.ref }} }
+
+      - uses: supabase/setup-cli@v1
+        with: { version: latest }
+
+      - name: Login
+        run: supabase login --token "${{ secrets.SUPABASE_ACCESS_TOKEN }}"
+
+      - name: Link project
+        working-directory: ./supabase
+        run: supabase link --project-ref "${{ secrets.SUPABASE_PROJECT_REF }}"
+
+      - name: Push migrations (online)
+        working-directory: ./supabase
+        env:
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase db push --password "$SUPABASE_DB_PASSWORD"
