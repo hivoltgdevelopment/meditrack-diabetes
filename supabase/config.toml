@@ -1,4 +1,4 @@
-﻿[db]
+[db]
 port = 55432
 [studio]
 port = 55555
