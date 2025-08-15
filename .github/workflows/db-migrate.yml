@@ -10,16 +10,19 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, labeled]
 
+permissions:
+  contents: read
+
 jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      migrations: ${{ steps.filter.outputs.migrations }}
+      migrations: ${{ steps.paths.outputs.migrations }}     # <- matches step id "paths" below
     steps:
       - uses: actions/checkout@v4
 
       - name: Detect migration changes
-        id: filter
+        id: paths
         uses: dorny/paths-filter@v3
         with:
           filters: |
@@ -36,7 +39,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.ref || github.ref }}
+          # SAFE fallback: only read inputs on workflow_dispatch
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.ref || github.ref }}
 
       - uses: supabase/setup-cli@v1
         with:
