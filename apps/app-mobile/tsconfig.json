@@ -1,8 +1,22 @@
 {
   "compilerOptions": {
-    "jsx": "react",
-    "allowJs": true,
-    "strict": true
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext"],
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+
+    "types": ["react-native", "expo"],
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "baseUrl": "."
   },
-  "extends": "../../tsconfig.json"
+  "include": ["src", "App.tsx", "app", "index.ts", "index.tsx", "expo-env.d.ts"],
+  "exclude": ["node_modules", "dist", "web-build", ".expo"]
 }
