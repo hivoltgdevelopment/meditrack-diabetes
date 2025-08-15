@@ -13,14 +13,16 @@
         "format": "prettier -w ."
     },
     "devDependencies": {
+        "@types/node": "^24.3.0",
+        "@vitejs/plugin-react": "^5.0.0",
         "concurrently": "^9.2.0",
         "eslint": "^9.6.0",
         "expo": "~51.0.39",
         "prettier": "^3.3.3",
-        "typescript": "^5.9.2"
+        "typescript": "^5.9.2",
+        "vite": "^7.1.2"
     },
     "dependencies": {
-        "@types/node": "^24.3.0",
         "@types/react": "~18.2.79"
     }
 }
