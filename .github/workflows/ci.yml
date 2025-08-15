@@ -17,9 +17,10 @@ jobs:
           cache: pnpm
       - name: Install deps
         run: pnpm i
-      - name: Typecheck (if configured)
-        run: pnpm -r run typecheck || true
-      - name: Lint (if configured)
-        run: pnpm -r run lint || true
+      - name: Typecheck
+        run: pnpm -r run typecheck
+      - name: Lint
+        run: pnpm -r run lint
       - name: Build web dashboard (optional)
         run: pnpm --filter web-dashboard build || true
+
