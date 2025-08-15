@@ -5,18 +5,15 @@
     "lib": ["ESNext"],
     "moduleResolution": "node",
     "jsx": "react-jsx",
-
-    "types": ["react-native", "expo"],
+    "types": ["react-native", "expo", "expo-router"],
     "resolveJsonModule": true,
     "esModuleInterop": true,
-
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-
     "baseUrl": "."
   },
-  "include": ["src", "App.tsx", "app", "index.ts", "index.tsx", "expo-env.d.ts"],
+  "include": ["app", "src", "App.tsx", "index.ts", "index.tsx"],
   "exclude": ["node_modules", "dist", "web-build", ".expo"]
 }
