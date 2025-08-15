@@ -1,0 +1,11 @@
+# Files/dirs to exclude from release zip (git archive)
+node_modules/ export-ignore
+.supabase/    export-ignore
+.expo/        export-ignore
+dist/         export-ignore
+web-build/    export-ignore
+.env/         export-ignore
+env/*         export-ignore
+!.env/.env.example export-ignore
+.gitignore    export-ignore
+.github/workflows/db-migrate.yml export-ignore

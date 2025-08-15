@@ -1,0 +1,24 @@
+name: release
+on:
+  push:
+    tags:
+      - "v*.*.*"   # e.g. v0.2.0
+
+jobs:
+  build-zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # needed for git archive
+
+      - name: Make scaffold zip (export-ignore aware)
+        run: |
+          git archive --format=zip --output meditrack-diabetes-scaffold-${GITHUB_REF_NAME}.zip ${GITHUB_REF_NAME}
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: meditrack-diabetes-scaffold-${{ github.ref_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
