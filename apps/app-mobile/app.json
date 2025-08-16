@@ -2,7 +2,7 @@
   "expo": {
     "name": "MediTrack Diabetes",
     "slug": "meditrack-diabetes",
-    "sdkVersion": "53.0.0",
+    "scheme": "meditrack",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -10,12 +10,15 @@
       "backgroundColor": "#141414"
     },
     "android": {
+      "package": "com.hivoltg.meditrack",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#009999",
-        "package": "com.hivoltg.meditrack",
-    "ios":   { "bundleIdentifier": "com.hivoltg.meditrack" },
+        "backgroundColor": "#009999"
       }
+    },
+    "ios": {
+      "bundleIdentifier": "com.hivoltg.meditrack",
+      "supportsTablet": true
     },
     "web": { "output": "static" }
   }
