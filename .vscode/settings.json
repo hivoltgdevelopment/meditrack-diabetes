@@ -5,6 +5,8 @@
   "deno.enablePaths": [
     "supabase/functions"
   ],
+  "deno.enable": true,
+  "deno.path": "C:\\Users\\hi_vo\\.deno\\bin\\deno.exe",
   "deno.lint": true,
   "deno.unstable": [
     "bare-node-builtins",
