@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MediTrack Diabetes</title>
+  <style>
+    :root{
+      --bg:#0b1320; --card:#111827; --text:#e5e7eb; --muted:#9ca3af;
+      --primary:#0EA5A3; --accent:#2563EB; --border:#1f2937;
+    }
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    .wrap{max-width:960px;margin:0 auto;padding:32px}
+    h1{font-size:28px;margin:0 0 8px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin:16px 0}
+    .row{display:flex;gap:16px;flex-wrap:wrap}
+    .btn{padding:12px 16px;border-radius:12px;border:1px solid var(--border);text-decoration:none;color:var(--text);background:#0f172a}
+    .btn.primary{background:var(--primary);color:#031b1b;border:none}
+    .btn.accent{background:var(--accent);color:#0b1225;border:none}
+    img.qr{width:220px;height:220px;border-radius:8px;border:1px solid var(--border);background:#0f172a;display:block}
+    footer{margin-top:24px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>MediTrack Diabetes</h1>
+    <p>Mobile-first medication & supply tracker. Backend: Supabase. Client: Expo (React Native).</p>
+
+    <div class="card">
+      <h2>Test on your phone</h2>
+      <p>Install the <strong>Expo Development Client</strong>, then scan this QR while your dev server is running.</p>
+      <div class="row">
+        <a class="btn accent" href="https://docs.expo.dev/develop/development-builds/introduction/" target="_blank">Get Dev Client</a>
+        <a class="btn" href="https://github.com/hivoltgdevelopment/meditrack-diabetes#readme" target="_blank">Project README</a>
+        <a class="btn" href="https://supabase.com/dashboard" target="_blank">Open Supabase</a>
+      </div>
+      <div class="row" style="align-items:center;margin-top:12px">
+        <img class="qr" src="./dev-qr.png" alt="Dev QR" />
+        <div>
+          <p>Update QR after starting Expo:</p>
+          <code>pwsh scripts/update-dev-qr.ps1 -Url "exp://192.168.0.xxx:19000"</code><br/>
+          <small>or</small><br/>
+          <code>./scripts/update-dev-qr.sh exp://192.168.0.xxx:19000</code>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Deployment</h2>
+      <p>Users will eventually install via App Store / Play Store. GitHub Pages is just for documentation + QR testing.</p>
+    </div>
+
+    <footer>© <span id="y"></span> hivoltgdevelopment • MediTrack Diabetes</footer>
+  </div>
+  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+</body>
+</html>
