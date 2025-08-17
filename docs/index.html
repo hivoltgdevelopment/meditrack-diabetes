@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediTrack Diabetes</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main style="max-width:700px;margin:auto;padding:2rem;font-family:sans-serif;">
+    <h1>MediTrack Diabetes</h1>
+    <p>
+      Repo scaffold optimized for <strong>Supabase + Resend + Expo (React Native)</strong>.
+    </p>
+
+    <h2>Quick Start</h2>
+    <pre><code>
+# 1) Install deps
+npm i -g supabase@latest
+pnpm i || npm i
+
+# 2) Start Expo
+npx expo start --dev-client --tunnel
+    </code></pre>
+
+    <h2>Scan QR to Test</h2>
+    <p>Open Expo Go on your phone and scan:</p>
+    <img src="qr.png" alt="Expo QR code" width="200" />
+
+    <h2>Dev Server Status</h2>
+    <div id="status-widget"></div>
+  </main>
+
+  <script src="status.js"></script>
+</body>
+</html>
