@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Text } from "react-native";
-import { supabase } from "../lib/supabase";
+import { supabase } from "./lib/supabase";
 
 export default function AuthScreen({ onAuthed }: { onAuthed: () => void }) {
   const [email, setEmail] = useState("");
