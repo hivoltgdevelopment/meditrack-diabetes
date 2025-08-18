@@ -1,0 +1,2 @@
+Compliance Statement
+MediTrack Diabetes does not use proprietary encryption, nor does it implement or distribute non-standard cryptographic algorithms. All encryption mechanisms are based on widely accepted standards (IETF, IEEE) and are either provided by Apple or integrated via compliant third-party services.
