@@ -1,0 +1,19 @@
+<svg width="1080" height="1920" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#0f172a"/>
+  <rect x="90" y="140" width="900" height="1640" rx="56" fill="#111827" stroke="#1f2937" stroke-width="6"/>
+  <text x="140" y="300" fill="#e5e7eb" font-family="system-ui" font-size="60" font-weight="700">Inventory</text>
+  <g>
+    <rect x="140" y="380" width="800" height="140" rx="20" fill="#0b1320" stroke="#1f2937"/>
+    <text x="170" y="450" fill="#e5e7eb" font-size="46" font-family="system-ui">Metformin 500 mg</text>
+    <text x="170" y="500" fill="#9ca3af" font-size="34" font-family="system-ui">Current: 30</text>
+    <rect x="640" y="430" width="150" height="60" rx="12" fill="#0b1320" stroke="#334155"/>
+    <text x="670" y="472" fill="#6b7280" font-size="32" font-family="system-ui">28</text>
+    <rect x="800" y="430" width="140" height="60" rx="12" fill="#0EA5A3"/>
+    <text x="835" y="472" fill="#031b1b" font-size="30" font-family="system-ui" font-weight="700">Apply</text>
+  </g>
+  <g>
+    <rect x="140" y="560" width="800" height="140" rx="20" fill="#0b1320" stroke="#1f2937"/>
+    <text x="170" y="630" fill="#e5e7eb" font-size="46">Insulin Pen</text>
+    <text x="170" y="680" fill="#9ca3af" font-size="34">Current: 12</text>
+  </g>
+</svg>

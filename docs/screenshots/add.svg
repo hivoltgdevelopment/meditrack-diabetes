@@ -1,0 +1,27 @@
+<svg width="1080" height="1920" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#0f172a"/>
+  <rect x="90" y="140" width="900" height="1640" rx="56" fill="#111827" stroke="#1f2937" stroke-width="6"/>
+  <text x="140" y="300" fill="#e5e7eb" font-family="system-ui" font-size="60" font-weight="700">Add Prescription</text>
+  <g>
+    <text x="140" y="420" fill="#9ca3af" font-size="36" font-family="system-ui">Name</text>
+    <rect x="140" y="440" width="800" height="90" rx="14" fill="#0b1320" stroke="#1f2937"/>
+    <text x="170" y="500" fill="#6b7280" font-size="36" font-family="system-ui">Metformin 500 mg</text>
+  </g>
+  <g>
+    <text x="140" y="580" fill="#9ca3af" font-size="36" font-family="system-ui">Dosage</text>
+    <rect x="140" y="600" width="800" height="90" rx="14" fill="#0b1320" stroke="#1f2937"/>
+    <text x="170" y="660" fill="#6b7280" font-size="36" font-family="system-ui">500 mg</text>
+  </g>
+  <g>
+    <text x="140" y="740" fill="#9ca3af" font-size="36" font-family="system-ui">Frequency</text>
+    <rect x="140" y="760" width="800" height="90" rx="14" fill="#0b1320" stroke="#1f2937"/>
+    <text x="170" y="820" fill="#6b7280" font-size="36" font-family="system-ui">2× per day</text>
+  </g>
+  <g>
+    <text x="140" y="900" fill="#9ca3af" font-size="36" font-family="system-ui">Starting quantity</text>
+    <rect x="140" y="920" width="800" height="90" rx="14" fill="#0b1320" stroke="#1f2937"/>
+    <text x="170" y="980" fill="#6b7280" font-size="36" font-family="system-ui">30</text>
+  </g>
+  <rect x="140" y="1100" width="800" height="110" rx="18" fill="#0EA5A3"/>
+  <text x="450" y="1175" fill="#031b1b" font-size="44" font-family="system-ui" font-weight="700">Save</text>
+</svg>
