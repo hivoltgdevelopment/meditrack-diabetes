@@ -7,13 +7,13 @@
     "apps/*",
     "packages/*",
     "supabase/*"
-    ]
-  ,
+  ],
   "scripts": {
     "dev": "concurrently -k -n expo,func -c auto,auto \"pnpm --filter app-mobile start:lan\" \"supabase functions serve --env-file ./env/.edge-functions.local\"",
     "typecheck": "tsc -b",
     "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
-    "format": "prettier -w ."
+    "format": "prettier -w .",
+    "test": "node --test src/services/validation.test.js"
   },
   "devDependencies": {
     "concurrently": "^9.2.0",
