@@ -6,6 +6,8 @@ import RxForm from "./src/screens/RxForm";
 import Inventory from "./src/screens/Inventory";
 import Pharmacies from "./src/screens/Pharmacies";
 import Doctors from "./src/screens/Doctors";
+import Profile from "./src/screens/Profile";
+import Insurance from "./src/screens/Insurance";
 import { ensureNotificationPermission } from "./src/lib/notify";
 import { Rx } from "./src/services/rx";
 import { View } from "react-native";
@@ -16,7 +18,9 @@ type Screen =
   | { name: "form"; rx?: Rx }
   | { name: "inventory" }
   | { name: "pharmacies" }
-  | { name: "doctors" };
+  | { name: "doctors" }
+  | { name: "profile" }
+  | { name: "insurance" };
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>({ name: "auth" });
@@ -47,6 +51,19 @@ export default function App() {
     return <Doctors onBack={() => setScreen({ name: "home" })} />;
   }
 
+  if (screen.name === "profile") {
+    return (
+      <Profile
+        onInsurance={() => setScreen({ name: "insurance" })}
+        onBack={() => setScreen({ name: "home" })}
+      />
+    );
+  }
+
+  if (screen.name === "insurance") {
+    return <Insurance onBack={() => setScreen({ name: "profile" })} />;
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <Dashboard
@@ -55,6 +72,7 @@ export default function App() {
         onInventory={() => setScreen({ name: "inventory" })}
         onPharmacies={() => setScreen({ name: "pharmacies" })}
         onDoctors={() => setScreen({ name: "doctors" })}
+        onProfile={() => setScreen({ name: "profile" })}
       />
     </View>
   );

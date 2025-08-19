@@ -12,12 +12,14 @@ export default function Dashboard({
   onInventory,
   onPharmacies,
   onDoctors,
+  onProfile,
 }: {
   onAdd: () => void;
   onEdit: (rx: Rx) => void;
   onInventory: () => void;
   onPharmacies: () => void;
   onDoctors: () => void;
+  onProfile: () => void;
 }) {
   const [items, setItems] = useState<Rx[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,6 +60,7 @@ export default function Dashboard({
       <Button title="Inventory" onPress={onInventory} />
       <Button title="Pharmacies" onPress={onPharmacies} />
       <Button title="Doctors" onPress={onDoctors} />
+      <Button title="Profile" onPress={onProfile} />
       {items.length === 0 ? (
         <Text style={{ marginTop: tokens.space(1.5) }}>
           No prescriptions yet.
