@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { supabase } from '../lib/supabase';
+import { initHealth, syncCgmData } from '../lib/health';
 
 type Rx = { id: string; name: string; category: string; remaining_quantity: number; frequency: string | null };
 
@@ -13,8 +14,12 @@ export default function Home() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => { if (!data.session) router.replace('/auth'); });
+    initHealth().then(() => syncCgmData());
     const load = async () => {
-      const { data, error } = await supabase.from('prescriptions').select('id,name,category,remaining_quantity,frequency').limit(50);
+      const { data, error } = await supabase
+        .from('prescriptions')
+        .select('id,name,category,remaining_quantity,frequency')
+        .limit(50);
       if (!error && data) setItems(data as Rx[]);
       setLoading(false);
     };
