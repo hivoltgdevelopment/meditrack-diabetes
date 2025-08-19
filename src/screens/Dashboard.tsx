@@ -4,15 +4,20 @@ import { Button, Card } from "../theme/components";
 import { tokens } from "../theme/tokens";
 import { listPrescriptions, deletePrescription, Rx } from "../services/rx";
 import { scheduleRefillReminder } from "../lib/notify";
+import { requestRefill } from "../services/refill_requests";
 
 export default function Dashboard({
   onAdd,
   onEdit,
   onInventory,
+  onPharmacies,
+  onDoctors,
 }: {
   onAdd: () => void;
   onEdit: (rx: Rx) => void;
   onInventory: () => void;
+  onPharmacies: () => void;
+  onDoctors: () => void;
 }) {
   const [items, setItems] = useState<Rx[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,6 +56,8 @@ export default function Dashboard({
       </Text>
       <Button title="Add prescription" onPress={onAdd} />
       <Button title="Inventory" onPress={onInventory} />
+      <Button title="Pharmacies" onPress={onPharmacies} />
+      <Button title="Doctors" onPress={onDoctors} />
       {items.length === 0 ? (
         <Text style={{ marginTop: tokens.space(1.5) }}>
           No prescriptions yet.
@@ -75,6 +82,17 @@ export default function Dashboard({
                   marginTop: tokens.space(1),
                 }}
               >
+                <Button
+                  title="Request refill"
+                  onPress={async () => {
+                    try {
+                      await requestRefill(item.id);
+                      alert("Refill requested.");
+                    } catch (e) {
+                      alert(String(e));
+                    }
+                  }}
+                />
                 <Button
                   title="Schedule reminder"
                   onPress={() => schedule(item)}
