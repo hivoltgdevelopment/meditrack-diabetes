@@ -11,12 +11,12 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
-    "expo": "^53.0.0",
-    "expo-notifications": "~0.28.15",
-    "expo-router": "^3.5.0",
+    "expo": "^53.0.20",
     "expo-file-system": "*",
-    "expo-sharing": "*",
+    "expo-notifications": "~0.28.15",
     "expo-print": "*",
+    "expo-router": "^3.5.0",
+    "expo-sharing": "*",
     "qrcode": "^1.5.3",
     "react": "18.2.0",
     "react-native": "0.76.3"
