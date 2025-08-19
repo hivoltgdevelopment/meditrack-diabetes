@@ -1,6 +1,8 @@
-{
-  "expo": {
-    "ios": { "bundleIdentifier": "com.hivoltg.meditrack" },
-    "scheme": "meditrack"
+export default {
+  expo: {
+    ios: {
+      bundleIdentifier: "com.hivoltg.meditrack"
+    },
+    scheme: "meditrack"
   }
-}
+};
