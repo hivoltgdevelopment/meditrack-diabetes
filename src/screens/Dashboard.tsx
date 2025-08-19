@@ -1,16 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { Button, Card } from "../theme/components";
+import { tokens } from "../theme/tokens";
 import { listPrescriptions, deletePrescription, Rx } from "../services/rx";
 import { scheduleRefillReminder } from "../lib/notify";
 
-export default function Dashboard({ onAdd, onEdit }: { onAdd: () => void; onEdit: (rx: Rx) => void }) {
+export default function Dashboard({
+  onAdd,
+  onEdit,
+}: {
+  onAdd: () => void;
+  onEdit: (rx: Rx) => void;
+}) {
   const [items, setItems] = useState<Rx[]>([]);
   const [loading, setLoading] = useState(true);
   async function load() {
     setLoading(true);
-    try { setItems(await listPrescriptions()); } finally { setLoading(false); }
+    try {
+      setItems(await listPrescriptions());
+    } finally {
+      setLoading(false);
+    }
   }
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   async function schedule(rx: Rx) {
     if (rx.next_refill_date) {
@@ -21,30 +35,57 @@ export default function Dashboard({ onAdd, onEdit }: { onAdd: () => void; onEdit
     }
   }
 
-  if (loading) return <View style={{ padding: 24 }}><Text>Loading…</Text></View>;
+  if (loading)
+    return (
+      <View style={{ padding: tokens.space(3) }}>
+        <Text>Loading…</Text>
+      </View>
+    );
 
   return (
-    <View style={{ padding: 24, gap: 12, flex: 1 }}>
-      <Text style={{ fontSize: 22, fontWeight: "600" }}>Your prescriptions</Text>
+    <View style={{ padding: tokens.space(3), gap: tokens.space(1.5), flex: 1 }}>
+      <Text style={{ fontSize: 22, fontWeight: "600" }}>
+        Your prescriptions
+      </Text>
       <Button title="Add prescription" onPress={onAdd} />
       {items.length === 0 ? (
-        <Text style={{ marginTop: 12 }}>No prescriptions yet.</Text>
+        <Text style={{ marginTop: tokens.space(1.5) }}>
+          No prescriptions yet.
+        </Text>
       ) : (
         <FlatList
           data={items}
           keyExtractor={(x) => x.id}
           renderItem={({ item }) => (
-            <View style={{ padding: 12, borderWidth: 1, borderRadius: 8, marginVertical: 6 }}>
+            <Card style={{ marginVertical: tokens.space(0.75) }}>
               <TouchableOpacity onPress={() => onEdit(item)}>
                 <Text style={{ fontWeight: "600" }}>{item.name}</Text>
-                <Text>{item.dosage ?? ""} • {item.frequency ?? ""}</Text>
+                <Text>
+                  {item.dosage ?? ""} • {item.frequency ?? ""}
+                </Text>
                 <Text>Next refill: {item.next_refill_date ?? "—"}</Text>
               </TouchableOpacity>
-              <View style={{ flexDirection: "row", gap: 8, marginTop: 8 }}>
-                <Button title="Schedule reminder" onPress={() => schedule(item)} />
-                <Button title="Delete" color="#b00020" onPress={async () => { await deletePrescription(item.id); await load(); }} />
+              <View
+                style={{
+                  flexDirection: "row",
+                  gap: tokens.space(1),
+                  marginTop: tokens.space(1),
+                }}
+              >
+                <Button
+                  title="Schedule reminder"
+                  onPress={() => schedule(item)}
+                />
+                <Button
+                  title="Delete"
+                  style={{ backgroundColor: tokens.color.danger }}
+                  onPress={async () => {
+                    await deletePrescription(item.id);
+                    await load();
+                  }}
+                />
               </View>
-            </View>
+            </Card>
           )}
         />
       )}
