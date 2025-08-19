@@ -8,9 +8,11 @@ import { scheduleRefillReminder } from "../lib/notify";
 export default function Dashboard({
   onAdd,
   onEdit,
+  onInventory,
 }: {
   onAdd: () => void;
   onEdit: (rx: Rx) => void;
+  onInventory: () => void;
 }) {
   const [items, setItems] = useState<Rx[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,6 +50,7 @@ export default function Dashboard({
         Your prescriptions
       </Text>
       <Button title="Add prescription" onPress={onAdd} />
+      <Button title="Inventory" onPress={onInventory} />
       {items.length === 0 ? (
         <Text style={{ marginTop: tokens.space(1.5) }}>
           No prescriptions yet.

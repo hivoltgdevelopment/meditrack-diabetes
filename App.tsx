@@ -3,11 +3,16 @@ import { supabase } from "./src/lib/supabase";
 import AuthScreen from "./src/screens/Auth";
 import Dashboard from "./src/screens/Dashboard";
 import RxForm from "./src/screens/RxForm";
+import Inventory from "./src/screens/Inventory";
 import { ensureNotificationPermission } from "./src/lib/notify";
 import { Rx } from "./src/services/rx";
 import { View } from "react-native";
 
-type Screen = { name: "auth" } | { name: "home" } | { name: "form"; rx?: Rx };
+type Screen =
+  | { name: "auth" }
+  | { name: "home" }
+  | { name: "form"; rx?: Rx }
+  | { name: "inventory" };
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>({ name: "auth" });
@@ -26,11 +31,16 @@ export default function App() {
     return <RxForm initial={screen.rx} onSaved={() => setScreen({ name: "home" })} />;
   }
 
+  if (screen.name === "inventory") {
+    return <Inventory onBack={() => setScreen({ name: "home" })} />;
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <Dashboard
         onAdd={() => setScreen({ name: "form" })}
         onEdit={(rx) => setScreen({ name: "form", rx })}
+        onInventory={() => setScreen({ name: "inventory" })}
       />
     </View>
   );
