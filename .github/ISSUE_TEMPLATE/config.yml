@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Cody Usage Guide
+    url: https://github.com/hivoltgdevelopment/meditrack-diabetes
+    about: How we author Cody Work Orders

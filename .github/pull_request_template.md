@@ -4,4 +4,4 @@
 - [ ] Titles in Title Case
 - [ ] Units spaced (15 g, 500 mg)
 - [ ] Footers present and correct
-- [ ] No changes outside /docs/ui and /docs/.github
+- [ ] No changes outside /docs/ui and /.github unless specified

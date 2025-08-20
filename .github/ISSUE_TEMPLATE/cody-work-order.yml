@@ -1,0 +1,76 @@
+name: Cody Work Order
+description: Structured instructions for Cody (Codex) to execute safely.
+title: "[CODY]: <short task name>"
+labels: ["cody", "automation"]
+body:
+  - type: dropdown
+    id: task_type
+    attributes:
+      label: Task type
+      options:
+        - docs-only (no code changes)
+        - code-change (app/src changes)
+        - mixed
+    validations: { required: true }
+
+  - type: input
+    id: branch_name
+    attributes:
+      label: Branch name
+      description: New or existing branch Cody should use
+      placeholder: feature/my-task
+    validations: { required: true }
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What to do (summary)
+      description: 3-6 bullet points (what success looks like)
+      placeholder: |
+        - Add docs/ui/SCREEN_MAP.md and COPY_DECK.md
+        - Export 10 PNGs to docs/ui/*
+        - Do not touch /src
+    validations: { required: true }
+
+  - type: textarea
+    id: file_ops
+    attributes:
+      label: File operations
+      description: Create/modify/move files with paths and (if needed) contents
+      placeholder: |
+        CREATE docs/ui/README.md
+        CREATE docs/ui/SCREEN_MAP.md  <<< paste content >>>
+        CREATE docs/ui/COPY_DECK.md   <<< paste content >>>
+        APPEND .github/pull_request_template.md  <<< paste content >>>
+    validations: { required: true }
+
+  - type: textarea
+    id: commit_messages
+    attributes:
+      label: Commit messages
+      description: One per logical change
+      placeholder: |
+        docs(ui): add MediTrack screen map + copy deck (V2, copy-locked)
+        docs(ui): add PNG exports for UI Mockups V2
+    validations: { required: true }
+
+  - type: textarea
+    id: pr_title_body
+    attributes:
+      label: PR title and body
+      description: Title on first line; body after a blank line
+      placeholder: |
+        UI Mockups V2 (docs-only, copy-locked)
+
+        Summary...
+    validations: { required: true }
+
+  - type: checkboxes
+    id: guardrails
+    attributes:
+      label: Guardrails
+      options:
+        - label: Do not modify /src or runtime code unless task_type = code-change
+        - label: Use only the branch specified above
+        - label: Keep diffs minimal and self-contained
+      
