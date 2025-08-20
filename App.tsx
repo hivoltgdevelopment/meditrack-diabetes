@@ -5,16 +5,23 @@ import { supabase } from "./src/lib/supabase";
 import AuthScreen from "./src/screens/Auth";
 import Dashboard from "./src/screens/Dashboard";
 import RxForm from "./src/screens/RxForm";
+import Inventory from "./src/screens/Inventory";
+import Pharmacies from "./src/screens/Pharmacies";
+import Doctors from "./src/screens/Doctors";
+import Profile from "./src/screens/Profile";
+import Insurance from "./src/screens/Insurance";
 import { ensureNotificationPermission } from "./src/lib/notify";
 import { Rx } from "./src/services/rx";
 
-type RootStackParamList = {
-  Auth: undefined;
-  Dashboard: undefined;
-  RxForm: { rx?: Rx } | undefined;
-};
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
+type Screen =
+  | { name: "auth" }
+  | { name: "home" }
+  | { name: "form"; rx?: Rx }
+  | { name: "inventory" }
+  | { name: "pharmacies" }
+  | { name: "doctors" }
+  | { name: "profile" }
+  | { name: "insurance" };
 
 export default function App() {
   const navigationRef = useNavigationContainerRef<RootStackParamList>();
@@ -32,32 +39,3 @@ export default function App() {
   }, [navigationRef]);
 
   useEffect(() => { ensureNotificationPermission(); }, []);
-
-  return (
-    <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator initialRouteName="Auth">
-        <Stack.Screen name="Auth" options={{ headerShown: false }}>
-          {({ navigation }) => (
-            <AuthScreen onAuthed={() => navigation.reset({ index: 0, routes: [{ name: "Dashboard" }] })} />
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="Dashboard" options={{ headerShown: false }}>
-          {({ navigation }) => (
-            <Dashboard
-              onAdd={() => navigation.navigate("RxForm")}
-              onEdit={(rx) => navigation.navigate("RxForm", { rx })}
-            />
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="RxForm" options={{ title: "Prescription" }}>
-          {({ navigation, route }) => (
-            <RxForm
-              initial={route.params?.rx}
-              onSaved={() => navigation.goBack()}
-            />
-          )}
-        </Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
