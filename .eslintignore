@@ -4,3 +4,10 @@ web-build
 .expo
 .supabase
 supabase/.temp
+docs/**
+.github/**
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.svg
