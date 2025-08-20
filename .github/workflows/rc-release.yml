@@ -1,0 +1,92 @@
+name: RC Release (tag + EAS build)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "RC tag name (e.g., rc-0.1.1)"
+        required: true
+        default: "rc-0.1.1"
+      base_ref:
+        description: "Branch or SHA to tag (default: main)"
+        required: false
+        default: "main"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve base SHA
+        id: sha
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const base = core.getInput("base_ref") || "main";
+            let sha = null;
+            try {
+              const { data } = await github.rest.repos.getBranch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                branch: base
+              });
+              sha = data.commit.sha;
+            } catch (e) {
+              if (/^[0-9a-f]{40}$/i.test(base)) sha = base;
+              else throw new Error(`Unable to resolve base_ref '${base}' to a SHA.`);
+            }
+            core.setOutput("sha", sha);
+
+      - name: Create or update tag
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = core.getInput("tag");
+            const sha = "${{ steps.sha.outputs.sha }}";
+            let exists = true;
+            try {
+              await github.rest.git.getRef({
+                owner: context.repo.owner, repo: context.repo.repo, ref: `tags/${tag}`
+              });
+            } catch { exists = false; }
+            if (!exists) {
+              await github.rest.git.createRef({
+                owner: context.repo.owner, repo: context.repo.repo,
+                ref: `refs/tags/${tag}`, sha
+              });
+              core.notice(`Created tag ${tag} -> ${sha}`);
+            } else {
+              await github.rest.git.updateRef({
+                owner: context.repo.owner, repo: context.repo.repo,
+                ref: `tags/${tag}`, sha, force: true
+              });
+              core.notice(`Updated tag ${tag} -> ${sha}`);
+            }
+
+      - name: Checkout at tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Setup Node (npm cache)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Expo CLI / EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EAS_TOKEN }}
+
+      - name: Install deps (npm)
+        run: npm ci
+
+      - name: iOS build (preview)
+        run: npx eas build --platform ios --profile preview --non-interactive
+
+      - name: Android build (preview)
+        run: npx eas build --platform android --profile preview --non-interactive
