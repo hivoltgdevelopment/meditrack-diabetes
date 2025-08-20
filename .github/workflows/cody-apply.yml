@@ -1,10 +1,17 @@
-name: Cody — Apply Work Order
+name: Cody — Apply Work Order (v2)
 
 on:
+  # Let you run it directly from Actions with fields (no issue required)
+  workflow_dispatch:
+    inputs:
+      branch_name: { description: "Branch name", required: true }
+      file_ops: { description: "CREATE/APPEND blocks", required: true }
+      commit_messages: { description: "Commit messages (one per line)", required: false }
+      pr_title_body: { description: "PR title (first line) + body", required: true }
+
+  # Still support the label flow from an Issue Form
   issues:
-    types: [opened, edited, labeled]
-  issue_comment:
-    types: [created, edited]
+    types: [labeled]
 
 permissions:
   contents: write
@@ -13,43 +20,57 @@ permissions:
 
 jobs:
   apply:
-    # Runs when issue is labeled cody-apply OR on any issue comment (you can narrow later)
+    # Run when: (A) manual dispatch, or (B) an issue gets the cody-apply label
     if: >
+      github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'issues' &&
        github.event.action == 'labeled' &&
-       github.event.label.name == 'cody-apply') ||
-      github.event_name == 'issue_comment'
+       github.event.label.name == 'cody-apply')
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Parse Work Order & Write Files
-        id: parse
+      - id: parse
         uses: actions/github-script@v7
         with:
           script: |
-            const body = (context.payload.issue && context.payload.issue.body) || "";
-            function section(title) {
-              const re = new RegExp(`\\*\\*${title}\\*\\*[\\s\\r\\n]+([\\s\\S]*?)(?=\\n\\*\\*|$)`, 'i');
-              const m = body.match(re);
-              return m ? m[1].trim() : "";
+            const isDispatch = context.eventName === 'workflow_dispatch';
+            let branchName, fileOpsRaw, commitsRaw, prTitleBody;
+
+            function sectionAny(body, names) {
+              for (const title of names) {
+                const re = new RegExp(
+                  `(?:\\*\\*${title}\\*\\*|###\\s+${title})[\\s\\r\\n]+([\\s\\S]*?)(?=\\n(?:\\*\\*|###\\s+)|$)`,
+                  'i'
+                );
+                const m = body.match(re);
+                if (m) return m[1].trim();
+              }
+              return "";
             }
 
-            const branchName  = section("Branch name");
-            const fileOpsRaw  = section("File operations");
-            const commitsRaw  = section("Commit messages");
-            const prTitleBody = section("PR title and body");
+            if (isDispatch) {
+              const get = (k) => (core.getInput(k) || "").trim();
+              branchName   = get('branch_name');
+              fileOpsRaw   = get('file_ops');
+              commitsRaw   = get('commit_messages');
+              prTitleBody  = get('pr_title_body');
+            } else {
+              const body = (context.payload.issue && context.payload.issue.body) || "";
+              branchName  = sectionAny(body, ["Branch name","Branch Name"]);
+              fileOpsRaw  = sectionAny(body, ["File operations","File Operations"]);
+              commitsRaw  = sectionAny(body, ["Commit messages","Commit Messages"]);
+              prTitleBody = sectionAny(body, ["PR title and body","PR Title and Body","PR title","PR Title"]);
+            }
 
-            if (!branchName) throw new Error("Branch name not found in issue body.");
+            if (!branchName) throw new Error("Branch name not found in inputs or issue body.");
             if (!fileOpsRaw) throw new Error("File operations block not found.");
-            if (!prTitleBody) throw new Error("PR title and body not found.");
+            if (!prTitleBody) throw new Error("PR title/body not found.");
 
-            const commitMessages = (commitsRaw || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
             const fs = require('fs'); const path = require('path');
 
-            // Parse CREATE/APPEND blocks
+            // Parse CREATE/APPEND sections
             const lines = fileOpsRaw.split(/\r?\n/);
             let i = 0, ops = [];
             while (i < lines.length) {
@@ -57,18 +78,17 @@ jobs:
               if (!line) { i++; continue; }
               const m = line.match(/^(CREATE|APPEND)\s+(.+)$/i);
               if (!m) { i++; continue; }
-              const op = m[1].toUpperCase(); const target = m[2].trim();
+              const op = m[1].toUpperCase(), target = m[2].trim();
               i++;
               if ((lines[i] || "").trim() !== "<<<BEGIN") throw new Error(`Expected <<<BEGIN after ${op} ${target}`);
               i++;
               const buf = [];
               while (i < lines.length && (lines[i] || "").trim() !== "<<<END") { buf.push(lines[i]); i++; }
               if (i >= lines.length) throw new Error(`Missing <<<END for ${target}`);
-              const content = buf.join("\n"); i++; // skip <<<END
+              const content = buf.join("\n"); i++;
               ops.push({ op, target, content });
             }
 
-            // Write files
             for (const {op, target, content} of ops) {
               const full = path.join(process.cwd(), target);
               fs.mkdirSync(path.dirname(full), { recursive: true });
@@ -77,10 +97,10 @@ jobs:
                 let prev = ""; try { prev = fs.readFileSync(full, "utf8"); } catch {}
                 fs.writeFileSync(full, prev + (prev ? "\n" : "") + content, "utf8");
               }
-              core.info(`${op} ${target} (${content.length} bytes)`);
+              core.info(`${op} ${target}`);
             }
 
-            // Split PR title/body (first line = title)
+            const commitMessages = (commitsRaw || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
             const idx = prTitleBody.indexOf("\n");
             const prTitle = idx === -1 ? prTitleBody.trim() : prTitleBody.slice(0, idx).trim();
             const prBody  = idx === -1 ? "" : prTitleBody.slice(idx+1).trim();
@@ -90,7 +110,7 @@ jobs:
             core.setOutput("prTitle", prTitle);
             core.setOutput("prBody", prBody);
 
-      - name: Create/Update Branch, Commit, Push
+      - name: Commit & push
         run: |
           set -e
           BRANCH="${{ steps.parse.outputs.branch }}"
@@ -107,7 +127,6 @@ jobs:
           git push -u origin "$BRANCH" --force-with-lease
 
       - name: Open/Update PR
-        id: pr
         uses: actions/github-script@v7
         with:
           script: |
@@ -115,33 +134,18 @@ jobs:
             const base = "main";
             const title = "${{ steps.parse.outputs.prTitle }}";
             const body  = `${{ steps.parse.outputs.prBody }}`;
-
             const { data: prs } = await github.rest.pulls.list({
               owner: context.repo.owner, repo: context.repo.repo,
               head: `${context.repo.owner}:${head}`, state: "open"
             });
-
             if (prs.length) {
               await github.rest.pulls.update({
                 owner: context.repo.owner, repo: context.repo.repo,
                 pull_number: prs[0].number, title, body
               });
-              core.notice(`Updated PR #${prs[0].number}`);
             } else {
-              const { data: pr } = await github.rest.pulls.create({
+              await github.rest.pulls.create({
                 owner: context.repo.owner, repo: context.repo.repo,
                 title, body, head, base
               });
-              core.notice(`Opened PR #${pr.number}`);
             }
-
-      - name: Comment back on the issue
-        if: always()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.issues.createComment({
-              owner: context.repo.owner, repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: "✅ Work order applied (branch pushed and PR opened/updated)."
-            });
