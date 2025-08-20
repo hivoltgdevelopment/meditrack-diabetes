@@ -1,0 +1,28 @@
+name: EAS Build (RC tags)
+
+on:
+  push:
+    tags:
+      - "rc-*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EAS_TOKEN }}
+
+      - name: Install deps
+        run: |
+          npm ci
+
+      - name: iOS build (simulator or internal)
+        run: |
+          npx eas build --platform ios --profile preview --non-interactive
+
+      - name: Android build (internal)
+        run: |
+          npx eas build --platform android --profile preview --non-interactive
