@@ -13,7 +13,7 @@
     "typecheck": "tsc -b",
     "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
     "format": "prettier -w .",
-    "test": "node --test src/services/validation.test.js"
+    "test": "tsc src/services/validation.test.ts src/services/validation.ts --outDir dist --types node --lib es2020 --esModuleInterop && node --test dist/validation.test.js"
   },
   "devDependencies": {
     "concurrently": "^9.2.0",
