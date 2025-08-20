@@ -1,0 +1,36 @@
+name: Cody Apply
+
+on:
+  issues:
+    types: [labeled]
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  cody-apply:
+    if: |
+      (github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'cody-apply') ||
+      github.event_name == 'issue_comment'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Parse work order
+        id: parse
+        uses: sourcegraph/cody/workflows/parse-work-order@v0
+        with:
+          issue-number: ${{ github.event.issue.number }}
+
+      - name: Apply work order
+        uses: sourcegraph/cody/workflows/apply@v0
+        with:
+          work-order: ${{ steps.parse.outputs.work-order }}
+          issue-number: ${{ github.event.issue.number }}
