@@ -1,0 +1,49 @@
+name: Cody Work Order
+description: Provide Cody with details to implement a change
+labels: ["cody"]
+body:
+  - type: input
+    id: task_type
+    attributes:
+      label: Task type
+      description: e.g. feature, bugfix, refactor
+    validations:
+      required: true
+  - type: input
+    id: branch_name
+    attributes:
+      label: Branch name
+      description: Branch for Cody to work on
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Brief summary of the change
+    validations:
+      required: true
+  - type: textarea
+    id: file_ops
+    attributes:
+      label: File operations
+      description: List file additions, deletions, or renames
+  - type: textarea
+    id: commit_messages
+    attributes:
+      label: Commit messages
+      description: One commit message per line
+    validations:
+      required: true
+  - type: textarea
+    id: pr_title_body
+    attributes:
+      label: PR title and body
+      description: Title and body for the pull request
+    validations:
+      required: true
+  - type: textarea
+    id: guardrails
+    attributes:
+      label: Guardrails
+      description: Additional constraints or context for Cody
