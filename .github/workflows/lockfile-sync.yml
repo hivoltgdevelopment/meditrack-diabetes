@@ -1,0 +1,36 @@
+name: Lockfile Sync
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node (npm cache)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Refresh package-lock.json (no scripts)
+        run: npm install --package-lock-only --no-audit --no-fund
+
+      - name: Create PR with updated lockfile
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/lockfile-sync
+          title: "chore(ci): sync package-lock.json with package.json"
+          body: |
+            Updates package-lock.json so `npm ci` can run cleanly in CI.
+            No runtime code changes.
+          commit-message: "chore(ci): update package-lock.json (lockfile sync)"
+          add-paths: |
+            package-lock.json
+          delete-branch: true
