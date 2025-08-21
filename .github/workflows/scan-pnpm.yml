@@ -1,0 +1,15 @@
+name: Scan workflows for pnpm
+on: workflow_dispatch
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          set -e
+          echo "Scanning .github/workflows for pnpm..."
+          if grep -R -nE "pnpm/action-setup|cache:\s*pnpm|pnpm (i|install)|pnpm-lock\.yaml" .github/workflows 2>/dev/null; then
+            echo "::error::Found pnpm references above. Replace with npm (cache: npm) and npm ci."
+            exit 1
+          fi
+          echo "No pnpm references found."
