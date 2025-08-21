@@ -17,6 +17,8 @@
     "expo-print": "*",
     "expo-router": "^3.5.0",
     "expo-sharing": "*",
+    "react-native-google-fit": "*",
+    "react-native-health": "*",
     "qrcode": "^1.5.3",
     "react": "18.2.0",
     "react-native": "0.76.3"

@@ -1,0 +1,30 @@
+name: Bug report
+description: Report a problem found during testing
+title: "[Bug]: <short summary>"
+labels: ["bug"]
+body:
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1) Go to ...
+        2) Tap ...
+        3) See ...
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: Expected result }
+  - type: textarea
+    id: actual
+    attributes: { label: Actual result }
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots
+      description: Paste console/logcat snippet or attach images
+  - type: input
+    id: build
+    attributes:
+      label: Build / tag
+      placeholder: rc-0.1.0 (iOS), rc-0.1.0 (Android)

@@ -11,13 +11,22 @@
   "scripts": {
     "dev": "concurrently -k -n expo,func -c auto,auto \"pnpm --filter app-mobile start:lan\" \"supabase functions serve --env-file ./env/.edge-functions.local\"",
     "typecheck": "tsc -b",
-    "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
+    "lint": "eslint .",
     "format": "prettier -w .",
-    "test": "node --test src/services/validation.test.js"
+    "test": "tsc src/services/validation.test.ts src/services/validation.ts --outDir dist --types node --lib es2020 --esModuleInterop && node --test dist/validation.test.js"
+  },
+  "dependencies": {
+    "@react-navigation/native": "6.1.18",
+    "@react-navigation/native-stack": "6.9.26",
+    "react-native-safe-area-context": "5.6.0",
+    "react-native-screens": "4.14.1"
   },
   "devDependencies": {
     "concurrently": "^9.2.0",
     "eslint": "^9.9.0",
+    "@eslint/js": "^9.9.0",
+    "typescript-eslint": "^8.4.0",
+    "globals": "^15.8.0",
     "prettier": "^3.3.3",
     "typescript": "^5.5.4"
   }

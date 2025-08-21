@@ -8,7 +8,12 @@ export async function requestRefill(prescription_id: string) {
     .from("refill_requests")
     .insert(payload);
   if (error) throw error;
-  await supabase.functions.invoke("send-refill-email", {
-    body: { prescription_id },
-  });
+  const { data, error: invokeError } = await supabase.functions.invoke(
+    "send-refill-email",
+    {
+      body: { prescription_id },
+    },
+  );
+  if (invokeError) throw invokeError;
+  return data;
 }

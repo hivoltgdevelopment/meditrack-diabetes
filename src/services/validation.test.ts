@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { isNameValid, isDateValid } from "./validation.js";
+import { isNameValid, isDateValid } from "./validation";
 
 test("isNameValid", () => {
   assert.equal(isNameValid(""), false);

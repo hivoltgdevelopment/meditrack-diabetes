@@ -1,12 +1,19 @@
 import { supabase } from "../lib/supabase";
+import type { Insurance } from "../lib/database.types";
 
-export type Insurance = {
-  id: string;
-  user_id: string;
-  provider: string;
-  policy_number: string;
-  coverage_details?: string | null;
-};
+function assertInsurance(record: unknown): asserts record is Insurance {
+  const r = record as Record<string, unknown> | null;
+  if (
+    !r ||
+    typeof r.id !== "string" ||
+    typeof r.user_id !== "string" ||
+    typeof r.provider !== "string" ||
+    typeof r.policy_number !== "string" ||
+    !(typeof r.coverage_details === "string" || r.coverage_details === null)
+  ) {
+    throw new Error("Invalid insurance record");
+  }
+}
 
 export async function listInsurance(): Promise<Insurance[]> {
   const { data, error } = await supabase
@@ -14,7 +21,9 @@ export async function listInsurance(): Promise<Insurance[]> {
     .select("id, user_id, provider, policy_number, coverage_details")
     .order("provider", { ascending: true });
   if (error) throw error;
-  return (data as any) ?? [];
+  const rows = data ?? [];
+  rows.forEach(assertInsurance);
+  return rows;
 }
 
 export async function insertInsurance(values: Partial<Insurance>) {
@@ -27,7 +36,8 @@ export async function insertInsurance(values: Partial<Insurance>) {
     .select("*")
     .single();
   if (error) throw error;
-  return data as Insurance;
+  assertInsurance(data);
+  return data;
 }
 
 export async function updateInsurance(
@@ -41,7 +51,8 @@ export async function updateInsurance(
     .select("*")
     .single();
   if (error) throw error;
-  return data as Insurance;
+  assertInsurance(data);
+  return data;
 }
 
 export async function deleteInsurance(id: string) {

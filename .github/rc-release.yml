@@ -1,0 +1,3 @@
+- name: Install deps (prefer ci; fall back to install)
+  run: |
+    npm ci || npm install --no-audit --no-fund
