@@ -39,6 +39,21 @@ jobs:
             }
             core.setOutput("sha", sha);
 
+      - name: Validate inputs
+        id: validate
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const raw = core.getInput('tag');
+            if (!raw) {
+              throw new Error('Tag input is required');
+            }
+            const tag = raw.trim().replace(/^refs\/tags\//, '');
+            if (!/^rc-[0-9]+\.[0-9]+\.[0-9]+$/.test(tag)) {
+              throw new Error(`Invalid tag '${tag}'`);
+            }
+            core.setOutput('tag', tag);
+
       - name: Create or update tag
         uses: actions/github-script@v7
         with:
