@@ -57,8 +57,9 @@ jobs:
       - name: Create or update tag
         uses: actions/github-script@v7
         with:
+          tag: ${{ steps.validate.outputs.tag }}
           script: |
-            const tag = "${{ steps.validate.outputs.tag }}";
+            const tag = core.getInput('tag');
             const sha = "${{ steps.sha.outputs.sha }}";
             let exists = true;
             try {
